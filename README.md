@@ -234,6 +234,100 @@ Reiniciamos servidor:
 
 
 
+# **SITIO 2**
+
+Este segundo sitio permitirá acceder a una aplicación NodeJs que debe estar
+ejecutándose en el puerto 3000 de nuestra máquina.
+
+## REQUISITOS
+
+1. Estar publicado en el puerto 81.
+2. El directorio donde se encuentra el sitio será /var/www/sitioNode.
+3. Los logs se situarán en el directorio /etc/logs/sitioNode.
+4. Dispone de un directorio /public_files cuyo contenido se listará al acceder a http://localhost:81/public_files. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero .htaccess
+5. Al acceder a http://localhost:81/documentación se producirá una redirección
+a la página oficial de nodejs (https://nodejs.org/en/)
+
+- Creamos una aplicación Nodejs ejecutándose por el puerto 81.
+
+COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
+
+![img](img/captura22.png)
+
+![img](img/captura23.png)
+
+- Creamos nuestro virtual host por el puerto 81 siguiendo los mismos pasos que en el punto anterior.
+
+- El directorio donde se encuentra el contenido debe esr /var/www/sitioNode
+
+- Creamos la carpeta
+
+![img](img/captura24.png)
+
+- Colocamos dentro la aplicación node que  hemos creado
+
+![img](img/captura25.png)
+
+- Damos permisos a la carpeta:
+
+  ```
+  sudo chown -R $USER:$USER /var/www/sitioNode/
+  ```
+
+- Generamos el archivo de configuración, en la ruta _/etc/apache2/sites-enabled_
+
+  ![img](img/captura26.png)
+
+- Escribimos en el archivo las directivas por defecto, más nuestros cambios:
+
+  - Puerto 81
+  - Directorio del contenido: /var/www/sitioNode/backend
+  - Directorio de logs: /etc/logs/sitioNode
+
+   ![img](img/captura27.png)
+
+- Verificamos sintaxis
+
+  ```
+  apache2ctl -t
+  ```
+
+- Creamos la carpeta donde se guardarán los logs y que hemos especificado en la directiva:
+
+ ![img](img/captura28.png)
+
+- Especificamos el nuevo puerto que vamos a utilizar (81) en el archivo de configuración de puertos de apache _/etc/apache2/ports.conf
+
+  ![img](img/captura29.png)
+
+- Habilitamos el host virtual
+
+  ```
+  sudo a2ensite sitioNode.conf 
+  ```
+
+- Reiniciamos servidor
+
+  ```
+  sudo service apache2 reload
+  ```
+
+- Verificamos que se ha habilitado el host
+
+  ![img](img/captura30.png)
+
+ - Verificamos que se ha creado el archivo de logs
+
+  ![img](img/captura31.png)
+
+- Verificamos que el sitio funciona en el navegador
+
+  
+
+
+
+
+
 
 
 
