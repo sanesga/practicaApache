@@ -248,7 +248,7 @@ ejecutándose en el puerto 3000 de nuestra máquina.
 5. Al acceder a http://localhost:81/documentación se producirá una redirección
 a la página oficial de nodejs (https://nodejs.org/en/)
 
-- Creamos una aplicación Nodejs ejecutándose por el puerto 81.
+- Creamos una aplicación Nodejs en el directorio que queramos, en nuestro caso _/home/sandra/Escritorio/practicaApache/aplicacionNode, el directorio aplicación node, contiene nuestro index.js ejecutándose por el puerto 81 y el package.json.
 
 COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 
@@ -258,15 +258,12 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 
 - Creamos nuestro virtual host por el puerto 81 siguiendo los mismos pasos que en el punto anterior.
 
-- El directorio donde se encuentra el contenido debe esr /var/www/sitioNode
+- El directorio donde se encuentra el contenido debe ser /var/www/sitioNode
 
 - Creamos la carpeta
 
 ![img](img/captura24.png)
 
-- Colocamos dentro la aplicación node que  hemos creado
-
-![img](img/captura25.png)
 
 - Damos permisos a la carpeta:
 
@@ -294,7 +291,7 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 
 - Creamos la carpeta donde se guardarán los logs y que hemos especificado en la directiva:
 
- ![img](img/captura28.png)
+   ![img](img/captura28.png)
 
 - Especificamos el nuevo puerto que vamos a utilizar (81) en el archivo de configuración de puertos de apache _/etc/apache2/ports.conf
 
@@ -306,31 +303,41 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
   sudo a2ensite sitioNode.conf 
   ```
 
-- Para que apache pueda ejecutar la aplicación node necesitamos añadir la directiva ProxyPass al archivo de configuración de nuestro host:
-
-  ![img](img/captura32.png)
-
-- Reiniciamos servidor
-
-  ```
-  sudo service apache2 reload
-  ```
-
 - Verificamos que se ha habilitado el host
 
   ![img](img/captura30.png)
 
  - Verificamos que se ha creado el archivo de logs
 
-  ![img](img/captura31.png)
+   ![img](img/captura31.png)
+
+- Procedemos a que apache pueda ejecutar nuestra aplicación node. Para ello, añadimos la directiva ProxyPass al archivo de configuración de nuestro host: esto hará que al indicar la ruta localhost:81/index, nos redirigirá a nuestra aplicación node que está en marcha, como he visto al principio, en el puerto 3000.
+
+  ![img](img/captura32.png)
+
+- Para que la directiva ProxyPass funcione, tenemos que habilitar el módulo proxy_http.
+
+- Verificamos si lo tenemos instalado, mostrando una lista de todos los módulos instalados:
+
+```
+sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
+```
+- Como no aparece en la lista, ejecutamos el siguiente comando:
+
+```
+sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
+```
+
+![img](img/captura41.png)
+
+- Verificamos síntaxis y reiniciamos servidor
 
 - Verificamos que el sitio funciona en el navegador
 
-  
  ![img](img/captura33.png)
 
 
- - Dispone de un directorio /public_files cuyo contenido se listará al acceder a http://localhost:81/public_files. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero .htaccess
+- El sitio 2, dispondrá de un directorio /public_files cuyo contenido se listará al acceder a http://localhost:81/public_files. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero .htaccess
 
 - Los ficheros **htaccess** son ficheros de configuración de apache que nos permiten definir directivas a nivel de directorio sin necesidad de ser administradores del servidor.
 
@@ -339,36 +346,90 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 ![img](img/captura34.png)
 
 
-- Añadimos un Alias al archivo de configuración de nuestro host para poder acceder al contenido de la carpeta
+- Añadimos el Alias public_files al archivo de configuración de nuestro host, como se pide en el ejercicio, para poder acceder al contenido de la carpeta:
 
 ![img](img/captura36.png)
 
 - Verificamos sintaxis y relanzamos servidor.
 
+- Verificamos que funciona:
 
-- Sobre el directorio, añadimos un htaccess con el siguiente contenido:
+  ![img](img/captura37.png)
 
-![img](img/captura35.png) //ESTA MAL
+- Para restringir el acceso al directorio a solo aquellos usuarios conocidos por el sistema, crearemos un fichero .htaccess. 
+
+- Los ficheros **htaccess** son ficheros de configuración distribuida que nos permiten definir directivas a nivel de directorio, sin necesidad de ser administradores del servidor.
+
+- En el directorio public_files, añadimos el .htaccess, con el siguiente contenido. Con estas directivas, pediremos usuario y contraseña a los usurios del sistema que quieran acceder a este directorio.
+
+  ![img](img/captura35.png)
 
 - Una de las caraterísticas de los ficheros de configuración htaccess es que no necesitamos reiniciar el servidor para que los cambios se activen.
 - Una de las desventajas es que no podemos verificar la sintaxis.
 
-- Para que el fichero htaccess funcione, es necesario que el administrador del servidor nos otorgue permisos de sobreescritura, por lo tanto, nos dirigimos al archivo de configuración de apache _/etc/apache2/apache2.conf_ y en la sección de Directory añadimos la siguiente directiva:
+- Creamos el fichero de claves especificado en el htaccess. Nos situamos en la ruta /etc/apache2 y tecleamos este comando:
+
+  ```
+  sudo htpasswd -c claves.txt sandra
+  ```
+- Nos pedirá la contaseña del usuario dos veces, la introducimos y nos guarda el usuario y la contraseña.
+
+  ![img](img/captura39.png)
+
+- Verificamos que el archivo y las claves se han creado:
+
+  ![img](img/captura40.png)
+
+- Para que el fichero htaccess funcione, es necesario que el administrador del servidor nos otorgue permisos de sobreescritura, por lo tanto, nos dirigimos al archivo de configuración de apache _/etc/apache2/apache2.conf_ y en la sección de Directory añadimos la siguiente directiva, al final.
+
+  ![img](img/captura38.png)
+
+  - Verificamos sintaxis
+  - Relanzamos servidor
+
+- Verificamos que la restricción de acceso al directorio public_files funcione:
+
+  ![img](img/captura42.png)
+
+  - Si no introducimos usuario y contraseña, nos aparece el mensaje de acceso no autorizado:
+
+   ![img](img/captura43.png)
+
+- Si introducimos el usuario y la contraseña, nos permite acceder al contenido del directorio:
+
+ ![img](img/captura37.png)
+
+ ![img](img/captura44.png)
+
+
+## Al acceder a http://localhost:81/documentación se producirá una redirección a la página oficial de nodejs (https://nodejs.org/en/)
+
+- Añadimos la directiva **Redirect** al archivo de configuración de nuestro host _/etc/apache2/sites-available/sitioNode.conf, especificando el Endpoint y la url de la página donde redirigimos:
+
+![img](img/captura45.png)
+
+- Verificamos que funciona
+
+![img](img/captura46.png)
+
+![img](img/captura47.png)
+
+## (Investigación) Intenta monitorizar los logs de apache de uno de los sitios web por medio de la herramienta GoAccess mostrando el resultado en http://localhost/logs_sistema (2 puntos).
+
+
+1. Instalamos goAccess:
+
+```
+sudo apt-get install goaccess
+```
+
+![img](img/captura48.png)
 
 
 
 
 
 
-
-
-
-
-
-
-
-Al acceder a http://localhost:81/documentación se producirá una redirección
-a la página oficial de nodejs (https://nodejs.org/en/)
 
 
 
