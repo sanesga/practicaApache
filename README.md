@@ -425,6 +425,61 @@ sudo apt-get install goaccess
 
 ![img](img/captura48.png)
 
+- Empezamos a analizar los logs de nuestro host virtual sitioNode, especificando la ruta donde tenemos el archivo de logs.
+
+```
+goaccess -f /etc/logs/sitioNode/sitioNode_access.log
+```
+
+- Nos aparece una ventana de configuración del formato de logs, elegimos Common Log Format (CLF):
+
+![img](img/captura49.png)
+
+- A continuación, nos aparecerá el dashboard de GoAccess con los logs analizados:
+
+![img](img/captura50.png)
+
+- Para salir de esta pantalla pulsamos la tecla 'Q'.
+
+- Para volver a acceder a ella, usamos el siguiente comando:
+
+```
+zcat -f /etc/logs/sitioNode/sitioNode_access.log | goaccess
+```
+
+- También podemos exportar los logs analizados en formato html para acceder a ellos a través del servidor apache. Para ello, seguimos los siguientes pasos:
+
+- Creamos una carpeta en nuestro sitioNode, llamada logs_sistema, donde almacenaremos los datos en formato html para visualizarlos en el navegador a través del servidor:
+
+![img](img/captura52.png)
+
+- Ejecutamos el comando que nos creará dentro de nuestro sitio, un archivo denominado access.html donde estarán todos los logs analizados:
+
+```
+ goaccess -f /etc/logs/sitioNode/sitioNode_access.log > /var/www/sitioNode/logs_sistema/access.html
+```
+
+![img](img/captura51.png)
+
+
+- Creamos un Alias en nuestro virtual host para mostrar este archivo en la ruta _http://localhost/logs_sistema_
+
+![img](img/captura53.png)
+
+- Verificamos que entra a la página:
+
+![img](img/captura54.png)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
