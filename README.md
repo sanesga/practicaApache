@@ -306,6 +306,10 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
   sudo a2ensite sitioNode.conf 
   ```
 
+- Para que apache pueda ejecutar la aplicación node necesitamos añadir la directiva ProxyPass al archivo de configuración de nuestro host:
+
+  ![img](img/captura32.png)
+
 - Reiniciamos servidor
 
   ```
@@ -323,6 +327,49 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 - Verificamos que el sitio funciona en el navegador
 
   
+ ![img](img/captura33.png)
+
+
+ - Dispone de un directorio /public_files cuyo contenido se listará al acceder a http://localhost:81/public_files. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero .htaccess
+
+- Los ficheros **htaccess** son ficheros de configuración de apache que nos permiten definir directivas a nivel de directorio sin necesidad de ser administradores del servidor.
+
+- Creamos el directorio public_files dentro de /var/wwww/sitioNode/ y añadimos 3 archivos html en el interior
+
+![img](img/captura34.png)
+
+
+- Añadimos un Alias al archivo de configuración de nuestro host para poder acceder al contenido de la carpeta
+
+![img](img/captura36.png)
+
+- Verificamos sintaxis y relanzamos servidor.
+
+
+- Sobre el directorio, añadimos un htaccess con el siguiente contenido:
+
+![img](img/captura35.png) //ESTA MAL
+
+- Una de las caraterísticas de los ficheros de configuración htaccess es que no necesitamos reiniciar el servidor para que los cambios se activen.
+- Una de las desventajas es que no podemos verificar la sintaxis.
+
+- Para que el fichero htaccess funcione, es necesario que el administrador del servidor nos otorgue permisos de sobreescritura, por lo tanto, nos dirigimos al archivo de configuración de apache _/etc/apache2/apache2.conf_ y en la sección de Directory añadimos la siguiente directiva:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Al acceder a http://localhost:81/documentación se producirá una redirección
+a la página oficial de nodejs (https://nodejs.org/en/)
+
 
 
 
