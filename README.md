@@ -222,8 +222,7 @@ Este primer sitio permitirá visualizar una página php.
 
    ![img](img/captura19.png)
 
-
- ## PUNTO 5. CAMBIAR EL FORMATO DE LOS ERRORES.
+## PUNTO 5. CAMBIAR EL FORMATO DE LOS ERRORES.
 
 - Vamos a modificar el mensaje de error cuando obtengamos un estatus 404 (página no encontrada). Para ello, añadimos a nuestro archivo de configuración: _/etc/apache2/sites-enabled/sitioPhp.conf_, la siguiente directiva:
 
