@@ -11,16 +11,19 @@
 - Se puede modificar para ajustar el código y/o corregir errores.
 - Ofrece la posibilidad de agregar más funciones y módulos.
 - Altamente fiable.
-- Instalación fácil.
+- Instalación sencilla.
 - Los cambios realizado se registran de forma inmediata, incluso sin reiniciar el servidor.
 - Puede ejecutarse en casi cualquier sistema operativo.
 - Regularmente mantenido y actualizado.
 - Integración con otras aplicaciones creando los paquetes XAMPP, LAMPP y MAMP.
 - Posibilidad de modificar su configuración.
-- Bajo rendimiento si recibe miles de requests simultáneos.
-
 
 ***
+
+## OBJETIVOS DE LA PRÁCTICA
+
+En esta práctica aprenderemos a utilizar y configurar el servidor Apache y a crear Hosts Virtuales para alojar nuestros proyectos. Los **hosts virtuales** son alojamientos virtuales de nuestros sitios webs que sirven para poder ejecutar más de un sitio web en un mismo servidor, permitiéndonos así, compartir recursos.
+
 
 **Instalación de Apache**
 
@@ -28,29 +31,37 @@
 sudo apt-get install apache2
 ```
 
-**Comandos de utilización**
+**Comandos más utilizados**
 
-```
-sudo service apache2 start/stop/status/restart(reincia)/reload (recarga la configuración)
-```
+- Iniciar, parar, ver estado, reiniciar o recargar el servidor:
+
+  ```
+  sudo service apache2 start/stop/status/restart/reload
+  ```
+
+- Verificar sintaxis
+
+  ```
+  apache2ctl -t
+  ```
 
 ***
 
-# **SITIO 1**
+# SITIO 1
 
 Este primer sitio permitirá visualizar una página php.
 
-## REQUISITOS
+**Requisitos:**
 
-1. ### [Estar publicada en el puerto 82](#punto1)
-2. ### [El directorio donde se encuentra el contenido será _/var/wwww/sitioPhp_](#punto2)
-3. ### [Los logs se sitúan en el directorio _/etc/logs/sitioPhp_](#punto3)
-4. ### [Debe disponer de un fichero de log (_log_personalizado.log_) que mostrará la traza generada por un _CustomLog_ cuyo formato será _"%t%h%m%>s"_, al cual se le asociará el nombre _PhpLogFormat_](#punto4)
-5. ### [ Dispone de una página que se mostrará al acceder a una ruta que no exista, mostrando el mensaje _"Página no encontrada"_.](#punto5)
+1. Estar publicado en el puerto 82.
+2. El directorio donde se encuentre el contenido será _/var/wwww/sitioPhp_.
+3. Los logs se situarán en el directorio _/etc/logs/sitioPhp_.
+4. Deberá disponer de un fichero de log (_log_personalizado.log_) que mostrará la traza generada por un _CustomLog_ cuyo formato será _"%t%h%m%>s"_, al cual se le asociará el nombre _PhpLogFormat_.
+5. Dispondrá de una página que se mostrará al acceder a una ruta que no exista, mostrando el mensaje _"Página no encontrada"_.
 
 ***
 
-## PASOS A SEGUIR
+## PUNTOS 1 Y 2. MONTAJE Y CONFIGURACIÓN. PUERTOS.
 
 - Iniciamos el servidor Apache
 
@@ -66,7 +77,7 @@ Este primer sitio permitirá visualizar una página php.
 
   ![img](img/captura0.png)
 
-- Creamos el host virtual:
+- Creamos el host virtual en la carpeta _/var/www_
 
   ```
   sudo mkdir -p /var/www/sitioPhp
@@ -80,17 +91,19 @@ Este primer sitio permitirá visualizar una página php.
   sudo chown -R $USER:$USER /var/www/sitioPhp/
    ```
 
-- Damos permisos de lectura y ejecución del directorio web general _/var/wwww para que todos sus archivos y directorios puedan ser servidos correctamente.
+- Damos permisos de lectura y ejecución del directorio web general _/var/www_ para que todos sus archivos y directorios puedan ser servidos correctamente.
 
   ```
   sudo chmod -R 755 /var/www
    ```
 
-- Creamos una carpeta html dentro de nuestro host virtual e introducimos nuestra página php en el interior.
+- Creamos una carpeta html dentro de nuestro host virtual, donde estará nuestro programa php:
 
   ![img](img/captura2.png)
 
   ![img](img/captura3.png)
+
+- Introducimos  nuestro programa en el interior:
 
   ![img](img/captura4.png)
 
@@ -125,6 +138,16 @@ Este primer sitio permitirá visualizar una página php.
    systemctl reload apache2
    ```
 
+   Podemos ejecutar este comando, o como hemos visto al principio:
+
+   ```
+   sudo service apache2 reload
+   ```
+
+- Verificamos que el sitio ha sido habilitado yendo a la carpeta sites-enables situada en _/etc/apache2_:
+
+  ![img](img/captura55.png)
+
 - Como la página que queremos mostrar en el navegador es de php, instalamos el paquete de php para apache:
 
    ```
@@ -136,97 +159,77 @@ Este primer sitio permitirá visualizar una página php.
   ![img](img/captura9.png)
 
 
-## PERSONALIZAR LOGS
+## PUNTO 3. CAMBIAR DIRECTORIO DE LOS LOGS.
 
-- Cambiamos el directorio donde queremos que se guarden los logs y el nombre del archivo. En nuestro caso se guardarán en _/etc/logs/sitioPhp. Por defecto apache los guarda dentro de la variable _${APACHE_LOG_DIR}_, como vemos en la imagen:
+- Cambiamos el directorio donde queremos que se guarden los logs y el nombre del archivo. En nuestro caso se guardarán en _/etc/logs/sitioPhp_. Por defecto apache los guarda dentro de la variable _${APACHE_LOG_DIR}_, como vemos en la imagen:
 
   ![img](img/captura5.png)
 
-Esta variable se encuentra en el archivo de configuración de apache **envars**, en la ruta _/etc/apache2/ y nos guarda el archivo de logs _sitioPhp_access.log_, por defecto en _/var/log/apache2/
+  Esta variable se encuentra en el archivo de configuración de apache **envars**, en la ruta _/etc/apache2/_ y nos guarda el archivo de logs _sitioPhp_access.log_, por defecto en _/var/log/apache2/_
  
   ![img](img/captura10.png)
 
-Nosotros vamos a cambiar esa variable, por la ruta donde queremos que se guarden, en este caso, en /etc/logs/sitioPhp.
+  Nosotros vamos a cambiar esa variable, por la ruta donde queremos que se guarden, en este caso, en _/etc/logs/sitioPhp_.
 
-Primero, creamos la estructura de carpetas, ya que no existen.
+  - Primero, creamos la estructura de carpetas, ya que no existen.
 
-![img](img/captura11.png)
+    ![img](img/captura11.png)
 
-Tras esto, vamos al archivo de configuración de nuestro sitio, situado en _/etc/apache2/sites-available y modificamos el archivo sitioPhp.conf, dejándolo como vemos en la imagen:
+  - Tras esto, vamos al archivo de configuración de nuestro sitio, situado en _/etc/apache2/sites-available_ y modificamos el archivo _sitioPhp.conf_, dejándolo como vemos en la imagen:
 
-Hemos cambiado la ruta y también el nombre del archivo de logs, de _sitioPhp_access.log_ a _log_personalizado.log_
+    ![img](img/captura12.png)
 
-![img](img/captura12.png)
+    Como vemos, hemos cambiado la ruta y también el nombre del archivo de logs, de _sitioPhp_access.log_ a _log_personalizado.log_
 
-Verificamos sintaxis
+   - Verificamos sintaxis
   
- ```
- apache2ctl -t
- ```
+      ```
+      apache2ctl -t
+      ```
 
-Reiniciamos el servidor
+  - Reiniciamos el servidor
 
- ```
- sudo systemctl reload apache2
- ```
+    ```
+    sudo systemctl reload apache2
+    ```
 
- Y comprobamos que el archivo sitioPhp_access.log se ha guardado en la ruta correcta y contiene logs:
+  - Y comprobamos que el archivo sitioPhp_access.log se ha guardado en la ruta correcta y contiene logs:
 
-![img](img/captura13.png)
-
-
-## CAMBIAR EL FORMATO DEL CUSTOM LOG
-
-En el fichero de configuración de nuestro host virtual (_/etc/apache2/sites-enabled/sitioPhp.conf_) podemos ver como por defecto hemos asignado un _CustomLog_ llamado _**combined**_ para especificar el formato en el que se almacenarán los logs.
-
-![img](img/captura17.png)
-
-Procedemos a modificarlo, para darle a los logs el formato que nosotros queremos; _"%t %h %m %>s"_. Para ello accedemos al fichero donde se especifica este formato, en _/etc/apache2/apache2.conf_ y añadimos nuestro formato a continuación de los anteriores dándole el nombre de PhpLogFormat.
-
-![img](img/captura16.png)
-
-Vamos al archivo de configuración de nuestro host virtual y cambiamos el nombre del _CustomLog_ (combined) por el que acabamos de crear (PhpLogFormat), quedando de la siguiente manera:
-
-![img](img/captura18.png)
-
-Verificamos sintaxis
-
- ```
- apache2ctl -t
- ```
-
-Reiniciamos servidor:
-
- ```
- sudo systemctl reload apache2
- ```
-
- Comparamos el formato anterior:
-
- ![img](img/captura15.png)
-
- Con el actual, que nos muestra, la fecha y hora de la petición, el nombre del servidor remoto, el método utilizado para la petición y el código del estatus de la petición.
-
- ![img](img/captura19.png)
+    ![img](img/captura13.png)
 
 
- ## CAMBIAR EL FORMATO DE LOS ERRORES
+## PUNTO 4. CAMBIAR EL FORMATO DEL CUSTOM LOG.
 
-Vamos a modificar el mensaje de error cuando obtengamos un estatus 404 (página no encontrada). Para ello, añadimos a nuestro archivo de configuración: _/etc/apache2/sites-enabled/sitioPhp.conf_, la siguiente directiva:
+- En el fichero de configuración de nuestro host virtual (_/etc/apache2/sites-enabled/sitioPhp.conf_) podemos ver como por defecto hemos asignado un _CustomLog_ llamado _**combined**_ para especificar el formato en el que se almacenarán los logs.
 
-![img](img/captura20.png)
+  ![img](img/captura17.png)
 
-Verificamos sintaxis
+- Procedemos a modificarlo, para darle a los logs el formato que nosotros queremos; _"%t %h %m %>s"_. Para ello, accedemos al fichero donde se especifica este formato, en _/etc/apache2/apache2.conf_ y añadimos nuestro formato a continuación de los anteriores dándole el nombre de PhpLogFormat.
 
- ```
- apache2ctl -t
- ```
+  ![img](img/captura16.png)
 
-Reiniciamos servidor:
+- Vamos al archivo de configuración de nuestro host virtual y cambiamos el nombre del _CustomLog_ (_combined_) por el que acabamos de crear (_PhpLogFormat_), quedando de la siguiente manera:
 
- ```
- sudo systemctl reload apache2
- ```
+  ![img](img/captura18.png)
+
+- Verificamos sintaxiS y reiniciamos el servidor.
+
+- Comparamos el formato anterior:
+
+   ![img](img/captura15.png)
+
+- Con el actual, que nos muestra, la fecha y hora de la petición (_%t_), el nombre del servidor remoto (_%h_), el método utilizado para la petición (_%m_) y el código del estatus de la petición (_%>s_).
+
+   ![img](img/captura19.png)
+
+
+ ## PUNTO 5. CAMBIAR EL FORMATO DE LOS ERRORES.
+
+- Vamos a modificar el mensaje de error cuando obtengamos un estatus 404 (página no encontrada). Para ello, añadimos a nuestro archivo de configuración: _/etc/apache2/sites-enabled/sitioPhp.conf_, la siguiente directiva:
+
+  ![img](img/captura20.png)
+
+- Verificamos sintaxis y reiniciamos servidor.
 
 - Accedemos a una ruta que no existe y verificamos que nos muestre el mensaje introducido:
 
@@ -234,35 +237,39 @@ Reiniciamos servidor:
 
 
 
-# **SITIO 2**
+# SITIO 2
 
 Este segundo sitio permitirá acceder a una aplicación NodeJs que debe estar
 ejecutándose en el puerto 3000 de nuestra máquina.
 
-## REQUISITOS
+**Requisitos**
 
 1. Estar publicado en el puerto 81.
-2. El directorio donde se encuentra el sitio será /var/www/sitioNode.
-3. Los logs se situarán en el directorio /etc/logs/sitioNode.
-4. Dispone de un directorio /public_files cuyo contenido se listará al acceder a http://localhost:81/public_files. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero .htaccess
-5. Al acceder a http://localhost:81/documentación se producirá una redirección
-a la página oficial de nodejs (https://nodejs.org/en/)
+2. El directorio donde se encuentra el sitio será _/var/www/sitioNode_.
+3. Los logs se situarán en el directorio _/etc/logs/sitioNode_.
+4. Dispone de un directorio _/public_files_ cuyo contenido se listará al acceder a _http://localhost:81/public_files_. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero _.htaccess_.
+5. Al acceder a _http://localhost:81/documentación_ se producirá una redirección
+a la página oficial de nodejs (_https://nodejs.org/en/_).
 
-- Creamos una aplicación Nodejs en el directorio que queramos, en nuestro caso _/home/sandra/Escritorio/practicaApache/aplicacionNode, el directorio aplicación node, contiene nuestro index.js ejecutándose por el puerto 81 y el package.json.
+***
 
-COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
+## PUNTO 1, 2 Y 3. MONTAJE Y CONFIGURACIÓN. PUERTOS Y LOGS.
 
-![img](img/captura22.png)
+- Creamos una aplicación Nodejs en el directorio que queramos, en nuestro caso, _/home/sandra/Escritorio/practicaApache/aplicacionNode_, el directorio aplicación node, contiene nuestro _index.js_ ejecutándose por el puerto 81 y el _package.json_.
 
-![img](img/captura23.png)
+- Confirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
+
+  ![img](img/captura22.png)
+
+  ![img](img/captura23.png)
 
 - Creamos nuestro virtual host por el puerto 81 siguiendo los mismos pasos que en el punto anterior.
 
-- El directorio donde se encuentra el contenido debe ser /var/www/sitioNode
+- El directorio donde se encuentra el contenido debe ser /var/www/sitioNode.
 
-- Creamos la carpeta
+- Creamos la carpeta:
 
-![img](img/captura24.png)
+  ![img](img/captura24.png)
 
 
 - Damos permisos a la carpeta:
@@ -275,43 +282,39 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 
   ![img](img/captura26.png)
 
-- Escribimos en el archivo las directivas por defecto, más nuestros cambios:
+- Escribimos en el archivo las directivas por defecto más nuestros cambios:
 
-  - Puerto 81
-  - Directorio del contenido: /var/www/sitioNode/backend
-  - Directorio de logs: /etc/logs/sitioNode
+  - Puerto 81.
+  - Directorio del contenido: _/var/www/sitioNode/_.
+  - Directorio de logs: _/etc/logs/sitioNode_.
 
    ![img](img/captura27.png)
 
-- Verificamos sintaxis
+- Verificamos sintaxis.
 
-  ```
-  apache2ctl -t
-  ```
-
-- Creamos la carpeta donde se guardarán los logs y que hemos especificado en la directiva:
+- Creamos la carpeta donde se guardarán los logs y que hemos especificado en la directiva anterior:
 
    ![img](img/captura28.png)
 
-- Especificamos el nuevo puerto que vamos a utilizar (81) en el archivo de configuración de puertos de apache _/etc/apache2/ports.conf
+- Especificamos el nuevo puerto que vamos a utilizar (81) en el archivo de configuración de puertos de apache; _/etc/apache2/ports.conf_.
 
   ![img](img/captura29.png)
 
-- Habilitamos el host virtual
+- Habilitamos el host virtual:
 
   ```
   sudo a2ensite sitioNode.conf 
   ```
 
-- Verificamos que se ha habilitado el host
+- Verificamos que se ha habilitado el host:
 
   ![img](img/captura30.png)
 
- - Verificamos que se ha creado el archivo de logs
+ - Verificamos que se ha creado el archivo de logs:
 
    ![img](img/captura31.png)
 
-- Procedemos a que apache pueda ejecutar nuestra aplicación node. Para ello, añadimos la directiva ProxyPass al archivo de configuración de nuestro host: esto hará que al indicar la ruta localhost:81/index, nos redirigirá a nuestra aplicación node que está en marcha, como he visto al principio, en el puerto 3000.
+- Procedemos a que apache pueda ejecutar nuestra aplicación node. Para ello, añadimos la directiva ProxyPass al archivo de configuración de nuestro host. Esto hará que al indicar la ruta _localhost:81/index_, nos redirigirá a nuestra aplicación node que está en marcha, como hemos visto al principio, en el puerto 3000.
 
   ![img](img/captura32.png)
 
@@ -319,36 +322,37 @@ COnfirmarmos que nuestra aplicación funciona y se ejecuta por el puerto 3000.
 
 - Verificamos si lo tenemos instalado, mostrando una lista de todos los módulos instalados:
 
-```
-sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
-```
+  ```
+  sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
+  ```
 - Como no aparece en la lista, ejecutamos el siguiente comando:
 
-```
-sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
-```
+  ```
+  sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
+  ```
 
-![img](img/captura41.png)
+  ![img](img/captura41.png)
 
-- Verificamos síntaxis y reiniciamos servidor
+- Verificamos síntaxis y reiniciamos servidor.
 
-- Verificamos que el sitio funciona en el navegador
+- Verificamos que el sitio funciona en el navegador:
 
- ![img](img/captura33.png)
+   ![img](img/captura33.png)
+
+## PUNTO 4. RESTRINGIR ACCESO A UN DIRECTORIO. HTACCES.
+
+Vamos a crear un directorio _/public_files_ cuyo contenido se listará al acceder a _http://localhost:81/public_files_. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero _.htaccess_.
+
+Los ficheros **htaccess** son ficheros de configuración de apache que nos permiten definir directivas a nivel de directorio sin necesidad de ser administradores del servidor.
+
+- Creamos el directorio _public_files_ dentro de _/var/wwww/sitioNode/_ y añadimos 3 archivos html en el interior
+
+  ![img](img/captura34.png)
 
 
-- El sitio 2, dispondrá de un directorio /public_files cuyo contenido se listará al acceder a http://localhost:81/public_files. El acceso a dicho directorio estará restringido a aquellos usuarios conocidos por el sistema. Las directivas necesarias estarán en un fichero .htaccess
+- Añadimos el Alias _public_files_ al archivo de configuración de nuestro host, como se pide en el ejercicio, para poder acceder al contenido de la carpeta:
 
-- Los ficheros **htaccess** son ficheros de configuración de apache que nos permiten definir directivas a nivel de directorio sin necesidad de ser administradores del servidor.
-
-- Creamos el directorio public_files dentro de /var/wwww/sitioNode/ y añadimos 3 archivos html en el interior
-
-![img](img/captura34.png)
-
-
-- Añadimos el Alias public_files al archivo de configuración de nuestro host, como se pide en el ejercicio, para poder acceder al contenido de la carpeta:
-
-![img](img/captura36.png)
+  ![img](img/captura36.png)
 
 - Verificamos sintaxis y relanzamos servidor.
 
@@ -356,23 +360,23 @@ sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
 
   ![img](img/captura37.png)
 
-- Para restringir el acceso al directorio a solo aquellos usuarios conocidos por el sistema, crearemos un fichero .htaccess. 
+- Para restringir el acceso al directorio a solo aquellos usuarios conocidos por el sistema, crearemos un fichero _.htaccess_. 
 
-- Los ficheros **htaccess** son ficheros de configuración distribuida que nos permiten definir directivas a nivel de directorio, sin necesidad de ser administradores del servidor.
-
-- En el directorio public_files, añadimos el .htaccess, con el siguiente contenido. Con estas directivas, pediremos usuario y contraseña a los usurios del sistema que quieran acceder a este directorio.
+- En el directorio _public_files_, añadimos el _.htaccess_, con el contenido que se muestra a continuación. Con estas directivas, pediremos usuario y contraseña a los usurios del sistema que quieran acceder a este directorio.
 
   ![img](img/captura35.png)
 
-- Una de las caraterísticas de los ficheros de configuración htaccess es que no necesitamos reiniciar el servidor para que los cambios se activen.
-- Una de las desventajas es que no podemos verificar la sintaxis.
+- No verificamos sintaxis ni reiniciamos el servidor, ya que, una de las caraterísticas de los ficheros de configuración htaccess es que no necesitamos reiniciar el servidor para que los cambios se activen y una de las desventajas es que no podemos verificar su sintaxis.
 
-- Creamos el fichero de claves especificado en el htaccess. Nos situamos en la ruta /etc/apache2 y tecleamos este comando:
+- Creamos el fichero de claves especificado en el htaccess. Nos situamos en la ruta _/etc/apache2_ y tecleamos este comando:
 
   ```
   sudo htpasswd -c claves.txt sandra
   ```
-- Nos pedirá la contaseña del usuario dos veces, la introducimos y nos guarda el usuario y la contraseña.
+
+  El nombre final es el nombre del usuario al que queremos incluir en el archivo.
+
+- Nos pedirá la contraseña del usuario dos veces, la introducimos y nos guarda el usuario y la contraseña.
 
   ![img](img/captura39.png)
 
@@ -380,97 +384,112 @@ sudo /usr/sbin/apache2ctl -t -D DUMP_MODULES
 
   ![img](img/captura40.png)
 
+- Si quisiéramos agregar más usuarios, ejecutaríamos el mismo comando, pero sin la opcion -c, porque el archivo ya está creado:
+
+  ```
+  sudo htpasswd claves.txt juan
+  ```
+
 - Para que el fichero htaccess funcione, es necesario que el administrador del servidor nos otorgue permisos de sobreescritura, por lo tanto, nos dirigimos al archivo de configuración de apache _/etc/apache2/apache2.conf_ y en la sección de Directory añadimos la siguiente directiva, al final.
 
   ![img](img/captura38.png)
 
-  - Verificamos sintaxis
-  - Relanzamos servidor
+- Verificamos sintaxis
+- Relanzamos servidor
 
 - Verificamos que la restricción de acceso al directorio public_files funcione:
 
   ![img](img/captura42.png)
 
-  - Si no introducimos usuario y contraseña, nos aparece el mensaje de acceso no autorizado:
+- Si no introducimos usuario y contraseña, nos aparece el mensaje de acceso no autorizado:
 
    ![img](img/captura43.png)
 
 - Si introducimos el usuario y la contraseña, nos permite acceder al contenido del directorio:
 
- ![img](img/captura37.png)
+   ![img](img/captura37.png)
 
- ![img](img/captura44.png)
-
-
-## Al acceder a http://localhost:81/documentación se producirá una redirección a la página oficial de nodejs (https://nodejs.org/en/)
-
-- Añadimos la directiva **Redirect** al archivo de configuración de nuestro host _/etc/apache2/sites-available/sitioNode.conf, especificando el Endpoint y la url de la página donde redirigimos:
-
-![img](img/captura45.png)
-
-- Verificamos que funciona
-
-![img](img/captura46.png)
-
-![img](img/captura47.png)
-
-## (Investigación) Intenta monitorizar los logs de apache de uno de los sitios web por medio de la herramienta GoAccess mostrando el resultado en http://localhost/logs_sistema (2 puntos).
+   ![img](img/captura44.png)
 
 
-1. Instalamos goAccess:
+## PUNTO 5. REDIRECCIONES.
 
-```
-sudo apt-get install goaccess
-```
+Vamos a hacer que al acceder a _http://localhost:81/documentación_ se produzca una redirección a la página oficial de nodejs (_https://nodejs.org/en/_).
 
-![img](img/captura48.png)
+- Añadimos la directiva **Redirect** al archivo de configuración de nuestro host _/etc/apache2/sites-available/sitioNode.conf_, especificando el _Endpoint_ y la url de la página donde redirigimos:
 
-- Empezamos a analizar los logs de nuestro host virtual sitioNode, especificando la ruta donde tenemos el archivo de logs.
+  ![img](img/captura45.png)
 
-```
-goaccess -f /etc/logs/sitioNode/sitioNode_access.log
-```
+- Verificamos que funciona_
 
-- Nos aparece una ventana de configuración del formato de logs, elegimos Common Log Format (CLF):
+  ![img](img/captura46.png)
 
-![img](img/captura49.png)
+  ![img](img/captura47.png)
 
-- A continuación, nos aparecerá el dashboard de GoAccess con los logs analizados:
+## INVESTIGACIÓN. GO ACCES.
 
-![img](img/captura50.png)
+Vamos a monitorizar los logs de apache de nuestro sitio web _sitioNode_ a través de la herramienta **GoAccess**, mostrando el resultado en _http://localhost/logs_sistema_.
+
+**GoAccess** es un software de código abierto que nos permite analizar en tiempo real todos los logs de diferentes servicios del sistema donde lo instalemos. Nos puede mostrar la información a través de la terminal o a través de un interfaz gráfico, como veremos a continuación.
+
+- Instalamos _GoAccess_:
+
+  ```
+  sudo apt-get install goaccess
+  ```
+
+  ![img](img/captura48.png)
+
+- Empezamos a analizar los logs de nuestro host virtual _sitioNode_, especificando la ruta donde tenemos el archivo de logs.
+
+   ```
+   goaccess -f /etc/logs/sitioNode/sitioNode_access.log
+   ```
+
+- Nos aparece una ventana de configuración del formato de logs, elegimos _Common Log Format (CLF)_:
+
+  ![img](img/captura49.png)
+
+- A continuación, nos aparece el dashboard de _GoAccess_ con los logs analizados:
+
+  ![img](img/captura50.png)
 
 - Para salir de esta pantalla pulsamos la tecla 'Q'.
 
 - Para volver a acceder a ella, usamos el siguiente comando:
 
-```
-zcat -f /etc/logs/sitioNode/sitioNode_access.log | goaccess
-```
+  ```
+  zcat -f /etc/logs/sitioNode/sitioNode_access.log | goaccess
+  ```
 
-- También podemos exportar los logs analizados en formato html para acceder a ellos a través del servidor apache. Para ello, seguimos los siguientes pasos:
+- Vamos a exportar los logs analizados en formato html para acceder a ellos a través del servidor apache. Para ello, seguimos los siguientes pasos:
 
-- Creamos una carpeta en nuestro sitioNode, llamada logs_sistema, donde almacenaremos los datos en formato html para visualizarlos en el navegador a través del servidor:
+  - Creamos una carpeta en nuestro _sitioNode_, llamada _logs_sistema_, donde almacenaremos los datos en formato html para visualizarlos en el navegador a través del servidor:
 
-![img](img/captura52.png)
+    ![img](img/captura52.png)
 
-- Ejecutamos el comando que nos creará dentro de nuestro sitio, un archivo denominado access.html donde estarán todos los logs analizados:
+  - Ejecutamos el comando que nos creará dentro de nuestro sitio, un archivo denominado access.html donde estarán todos los logs analizados:
 
-```
- goaccess -f /etc/logs/sitioNode/sitioNode_access.log > /var/www/sitioNode/logs_sistema/access.html
-```
+    ```
+    goaccess -f /etc/logs/sitioNode/sitioNode_access.log > /var/www/sitioNode/logs_sistema/access.html
+    ```
 
-![img](img/captura51.png)
-
-
-- Creamos un Alias en nuestro virtual host para mostrar este archivo en la ruta _http://localhost/logs_sistema_
-
-![img](img/captura53.png)
-
-- Verificamos que entra a la página:
-
-![img](img/captura54.png)
+    ![img](img/captura51.png)
 
 
+   - Creamos un Alias en nuestro virtual host para mostrar este archivo en la ruta _http://localhost/logs_sistema_
+
+     ![img](img/captura53.png)
+
+  - Verificamos que entra a la página:
+
+    ![img](img/captura54.png)
+
+
+  - Para ir actualizando los logs, solo habrá que ejecutar el comando anterior tantas veces como se desee y refrescar la página.
+
+
+## ENLACE A GITHUB PAGES:
 
 
 
