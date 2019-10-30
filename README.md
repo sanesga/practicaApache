@@ -233,9 +233,9 @@ Este primer sitio permitirá visualizar una página php.
 
 - Accedemos a una ruta que no existe y verificamos que nos muestre el mensaje introducido:
 
-![img](img/captura21.png)
+  ![img](img/captura21.png)
 
-
+***
 
 # SITIO 2
 
@@ -426,11 +426,15 @@ Vamos a hacer que al acceder a _http://localhost:81/documentación_ se produzca 
 
   ![img](img/captura47.png)
 
+*** 
+
 ## INVESTIGACIÓN. GO ACCES.
 
 Vamos a monitorizar los logs de apache de nuestro sitio web _sitioNode_ a través de la herramienta **GoAccess**, mostrando el resultado en _http://localhost/logs_sistema_.
 
 **GoAccess** es un software de código abierto que nos permite analizar en tiempo real todos los logs de diferentes servicios del sistema donde lo instalemos. Nos puede mostrar la información a través de la terminal o a través de un interfaz gráfico, como veremos a continuación.
+
+***
 
 - Instalamos _GoAccess_:
 
@@ -488,8 +492,13 @@ Vamos a monitorizar los logs de apache de nuestro sitio web _sitioNode_ a travé
 
   - Para ir actualizando los logs, solo habrá que ejecutar el comando anterior tantas veces como se desee y refrescar la página.
 
+***
 
-## ENLACE A GITHUB PAGES:
+## ENLACE A GITHUB PAGES.
+
+_https://sanesga.github.io/practicaApache.gihub.io/_
+
+***
 
 
 
