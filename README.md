@@ -359,6 +359,17 @@ Los ficheros **htaccess** son ficheros de configuración de apache que nos permi
 
   ![img](img/captura37.png)
 
+- En nuestro caso, los directorios se listan porque en el archivo de configuración de Apache (_apache2.conf_), tenemos añadida la directiva _Options Indexes FollowSymLinks_, dentro de _\<Directory\>_ y aplicada a la ruta _/var/www/_, como se aprecia en la imagen:
+
+  ![img](img/captura56.png)
+
+
+   **_Indexes_** permite mostrar el contenido del directorio, en caso de no encontrar la página principal de acceso, que sería cualquier archivo con nombre _index.html_. Como nosotros no tenemos tal archivo, nos lista el contenido del directorio. **_FollowSyLinks_** permite disponer de enlaces simbólicos dentro del directorio.
+
+   Si quisiéramos aplicar esta directiva sólo a nuestro directorio _public_files_ y no a todo lo que haya en la carpeta _/www/_ como tenemos ahora, sólo tendríamos que añadirla al _\<Directory\>_ que se dirige a nuestra ruta y que podemos ver en la imagen en tercera posición.
+
+  
+
 - Para restringir el acceso al directorio a solo aquellos usuarios conocidos por el sistema, crearemos un fichero _.htaccess_. 
 
 - En el directorio _public_files_, añadimos el _.htaccess_, con el contenido que se muestra a continuación. Con estas directivas, pediremos usuario y contraseña a los usurios del sistema que quieran acceder a este directorio.
